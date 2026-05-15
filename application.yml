@@ -1,11 +1,9 @@
 # COMMON APPLICATION PROPERTIES
-
 server:
   # start services on random port by default
   port: 0
   # The stop processing uses a timeout which provides a grace period during which existing requests will be allowed to complete but no new requests will be permitted
   shutdown: graceful
-
 # embedded database init, supports mysql too trough the 'mysql' spring profile
 spring:
   sql:
@@ -25,31 +23,24 @@ spring:
     open-in-view: false
     hibernate:
       ddl-auto: none
-
-# Spring Boot 1.5 makes actuator secure by default
-management.security.enabled: false
-# Enable all Actuators and not only the two available by default /health and /info starting Spring Boot 2.0
-management.endpoints.web.exposure.include: "*"
-
 # Temporary hack required by the Spring Boot 2 / Spring Cloud Finchley branch
 # Waiting issue https://github.com/spring-projects/spring-boot/issues/13042
 spring.cloud.refresh.refreshable: false
-
-
 # Logging
 logging.level.org.springframework: INFO
-
 # Metrics
 management:
+  security:
+    enabled: false
+  endpoints:
+    web:
+      exposure:
+        include: "*"
   endpoint:
     metrics:
       enabled: true
     prometheus:
       enabled: true
-  endpoints:
-    web:
-      exposure:
-        include: '*'
   metrics:
     export:
       prometheus:
@@ -57,18 +48,16 @@ management:
   tracing:
     sampling:
       probability: 1
-
 eureka:
   instance:
     # Register IP address instead of hostname to avoid resolution failures on Windows
     prefer-ip-address: true
-
 # Chaos Engineering
 ---
 spring:
   config:
     activate:
-      on-profile: chaos-monkey      
+      on-profile: chaos-monkey
 management.endpoint.chaosmonkey.enabled: true
 chaos:
   monkey:
@@ -79,7 +68,6 @@ chaos:
       repository: false
       rest-controller: false
       service: false
-
 ---
 spring:
   config:
@@ -90,7 +78,6 @@ management:
     export:
       zipkin:
         endpoint: "http://tracing-server:9411/api/v2/spans"
-
 ---
 spring:
   config:
