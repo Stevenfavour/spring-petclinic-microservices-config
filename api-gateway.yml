@@ -3,19 +3,27 @@ spring:
     context-propagation: auto
   cloud:
     gateway:
-      routes:
-        - id: customers-service
-          uri: lb://customers-service
-          predicates:
-            - Path=/api/customer/**
-        - id: vets-service
-          uri: lb://vets-service
-          predicates:
-            - Path=/api/vet/**
-        - id: visits-service
-          uri: lb://visits-service
-          predicates:
-            - Path=/api/visit/**
+      server:
+        webflux:
+          routes:
+            - id: customers-service
+              uri: lb://customers-service
+              predicates:
+                - Path=/api/customer/**
+              filters:
+                - StripPrefix=2
+            - id: vets-service
+              uri: lb://vets-service
+              predicates:
+                - Path=/api/vet/**
+              filters:
+                - StripPrefix=2
+            - id: visits-service
+              uri: lb://visits-service
+              predicates:
+                - Path=/api/visit/**
+              filters:
+                - StripPrefix=2
 
 server:
   port: 8080
